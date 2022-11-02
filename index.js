@@ -1,12 +1,29 @@
 const express = require('express');
 const app = express();
-
-/*
-*	Route Handler
-*/
-app.get('/', (req, res) => {
-	res.send({ hi: 'hello page' });
-});
+const path = require('path');
 const PORT = process.env.PORT || 5000;
-console.log('App listent at Port: ', PORT);
-app.listen(PORT);
+
+//Static file declaration
+app.use(express.static(path.join(__dirname, 'client/build')));
+
+//production mode
+if (process.env.NODE_ENV === 'production') {
+  app.use(express.static(path.join(__dirname, 'client/build')));
+  
+  app.get('*', (req, res) => {
+    res.sendfile(path.join(__dirname = 'client/build/index.html'));
+  });
+}
+
+
+//build mode
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname+'/client/public/index.html'));
+});
+
+//start server
+app.listen(PORT, (req, res) => {
+  console.log( `App listening on port: ${PORT}`);
+});
+
+
